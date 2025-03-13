@@ -1,14 +1,30 @@
-# Compiler files
-cache/
+# Foundry build artifacts
 out/
+cache/
+broadcast/
+lib/
 
-# Ignores development broadcast logs
-!/broadcast
-/broadcast/*/31337/
-/broadcast/**/dry-run/
+# Dependencies
+foundry.toml.lock
 
-# Docs
-docs/
+# Compiled binary files
+*.a
+*.o
+*.so
+*.dylib
+*.exe
 
-# Dotenv file
+# Logs
+*.log
+
+# Node modules (if using JS tools)
+node_modules/
+
+# VS Code settings
+.vscode/
+
+# MacOS system files
+.DS_Store
+
+# Environment variables
 .env

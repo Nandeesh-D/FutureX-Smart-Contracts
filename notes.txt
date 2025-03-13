@@ -1,0 +1,7 @@
+factory: contract EventFactory 0x5c4a3C2CD1ffE6aAfDF62b64bb3E620C696c832E
+feeAddress: contract FeeAddress 0xf13D09eD3cbdD1C930d4de74808de1f33B6b3D4f
+usdc: contract USDCMock 0x5aAdFB43eF8dAF45DD80F4676345b7676f1D70e3
+
+
+
+token approval must be done in javascript

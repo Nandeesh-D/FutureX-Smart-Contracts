@@ -4,7 +4,7 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract FeeAddress{
     address owner;
     address constant usdc=0x5aAdFB43eF8dAF45DD80F4676345b7676f1D70e3;  //replace this
-    
+       
     constructor(){
         owner=msg.sender;
     }

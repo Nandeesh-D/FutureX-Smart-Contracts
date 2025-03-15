@@ -6,7 +6,7 @@ import {Event} from "./Event.sol";
 contract EventFactory {
     address public owner;
     address public feeAddress;
-    address immutable usdc;
+    address public immutable usdc;
     address[] public createdEvents;
 
     event EventCreated(
@@ -28,11 +28,13 @@ contract EventFactory {
 
     function createEvent(
         string memory _description,
+        string memory _imageUrl,
         uint _deadline
         
     ) external onlyOwner {
         Event newEvent = new Event(
             _description,
+            _imageUrl,
             _deadline,
             msg.sender,
             usdc,

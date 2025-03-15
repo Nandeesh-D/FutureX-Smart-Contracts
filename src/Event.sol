@@ -12,6 +12,7 @@ contract Event {
     address public immutable owner;
     address public immutable protocolFeeReceiver;
     string public description;
+    string public imageUrl;
     uint256 public immutable deadline;
     bool public resolved;
     bool public winningOption;
@@ -49,6 +50,7 @@ contract Event {
 
     constructor(
         string memory _description,
+        string memory _imageUrl,
         uint256 _deadline,
         address _owner,
         address _usdc,
@@ -57,6 +59,7 @@ contract Event {
         owner = _owner;
         protocolFeeReceiver = _protocolFeeReceiver; // protocol fee receiver
         description = _description;
+        imageUrl=_imageUrl;
         deadline = _deadline;
         usdc=IERC20(_usdc);
     }

@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 
 import{Test,console} from "forge-std/Test.sol";
+import{IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import{EventFactory} from "../src/EventFactory.sol";
 import{Event} from "../src/Event.sol";
 import{FeeAddress} from "../src/FeeAddress.sol";
@@ -10,8 +11,8 @@ import{USDCMock} from "../src/mocks/USDCMock.sol";
 import{Deployments} from "../script/Deployments.s.sol";
 contract EventTests is Test{
     EventFactory factory;
-    FeeAddress feeAddress;
-    USDCMock usdc;
+    address feeAddress;
+    address usdc;
     Event event1;
 
     uint256 owner=uint256(keccak256("owner private key"));
@@ -24,10 +25,10 @@ contract EventTests is Test{
         Deployments deployer=new Deployments();
         (factory,feeAddress,usdc)=deployer.run();
         vm.prank(address(deployer));
-        usdc.mint(user,100e6);
-        usdc.mint(user2,100e6);
-        usdc.mint(user3,100e6);
-        console.log(usdc.balanceOf(user));
+        // IERC20(usdc).mint(user,100e6);
+        // usdc.mint(user2,100e6);
+        // usdc.mint(user3,100e6);
+        // console.log(usdc.balanceOf(user));
     }
 
     modifier EventCreated(){

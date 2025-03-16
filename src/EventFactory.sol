@@ -3,6 +3,15 @@ pragma solidity ^0.8.0;
 
 import {Event} from "./Event.sol";
 
+/**
+ * Tests are done in local chain 'Anvil'
+ * 
+ * To run tests, make this changes
+ * 
+ * 1.Deploy mockUSDC to anvil
+ * 2.update the usdc address to this
+ * 3.run tests
+ */
 contract EventFactory {
     address public owner;
     address public feeAddress;

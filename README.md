@@ -1,66 +1,151 @@
-## Foundry
+# 🏆 Decentralized Prediction Markets
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+## Overview
+This project implements a **decentralized prediction market** platform where users can stake **USDC** on the outcomes of various events. The system uses smart contracts to allow an admin to create events, users to place bets on "Yes" or "No" outcomes, and ensures fair resolution and reward distribution.
 
-Foundry consists of:
+## Features
+- ✅ **Event Creation**: Admin creates events with descriptions, images, and deadlines
+- ✅ **Decentralized Predictions**: Users stake USDC on binary outcomes (Yes/No)
+- ✅ **Fair Resolution**: Admin resolves events after deadline passes
+- ✅ **Automated Reward Distribution**: Winners receive proportional rewards
+- ✅ **Protocol Fee**: 5% fee taken from winnings for protocol sustainability
+- ✅ **Safety Mechanisms**: Users can withdraw stakes if events aren't resolved within 5 days
+- ✅ **Anti-Manipulation**: Owner cannot participate in betting
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## Smart Contracts
 
-## Documentation
+### `EventFactory.sol`
+The factory contract that:
+- Deploys new prediction event contracts
+- Tracks all created events
+- Manages protocol fee destination
+- Restricts event creation to owner
 
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
-
-```shell
-$ forge build
+```solidity
+function createEvent(
+    string memory _description,
+    string memory _imageUrl,
+    uint _deadline
+) external onlyOwner
 ```
 
-### Test
+### `Event.sol`
+The core prediction event contract that:
+- Manages individual betting events
+- Handles user bets and stake tracking
+- Calculates and distributes winnings
+- Implements the safety refund mechanism
+- Enforces protocol fees
 
-```shell
-$ forge test
+Key functions:
+```solidity
+function placeBet(bool _choice, uint256 _amount) external beforeDeadline
+function resolveEvent(bool _winningOption) external onlyOwner afterDeadline
+function claimRewards() external afterDeadline
+function refundStake() external afterDeadline
 ```
 
-### Format
+## Implementation Details
 
-```shell
-$ forge fmt
-```
+### Reward Calculation
+When an event resolves:
+1. Winners share the entire pool (both winning and losing stakes)
+2. Rewards are proportional to the user's stake
+3. A 5% protocol fee is taken from profits (not the original stake)
 
-### Gas Snapshots
+### Safety Features
+- Time-based restrictions (before/after deadline)
+- 5-day grace period for refunds if admin fails to resolve
+- Owner exclusion from betting
 
-```shell
-$ forge snapshot
-```
+## Deployment
+Contracts have been deployed to the **Sepolia Testnet** using Foundry.
 
-### Anvil
+## Getting Started
 
-```shell
-$ anvil
-```
+### Prerequisites
+- [Foundry](https://book.getfoundry.sh/getting-started/installation)
+- Sepolia Testnet ETH (for gas)
+- Testnet USDC
 
-### Deploy
+### Installation
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd decentralized-prediction-markets
+   ```
 
-### Cast
+2. **Install dependencies**
+   ```bash
+   forge install
+   ```
 
-```shell
-$ cast <subcommand>
-```
+3. **Compile contracts**
+   ```bash
+   forge build
+   ```
 
-### Help
+4. **Run tests**
+   ```bash
+   forge test
+   ```
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+5. **Environment Setup**
+   Create a `.env` file with the following:
+   ```
+   RPC_URL=your_rpc_url_here
+   MY_ADDRESS=your_wallet_address_here
+   PRIVATE_KEY=your_private_key_here
+   ```
+
+6. **Deploy contracts**
+   ```bash
+   forge script script/Deploy.s.sol --rpc-url <SEPOLIA_RPC_URL> --private-key <PRIVATE_KEY> --broadcast
+   ```
+
+## Usage Guide
+
+
+
+### For Admins
+1. **Create a new event**
+   ```solidity
+   // Through the EventFactory contract
+   eventFactory.createEvent("Will ETH hit $5000 by April 2025?", "https://example.com/eth-image.jpg", 1718309400);
+   ```
+
+2. **Resolve an event after deadline**
+   ```solidity
+   // Through the specific Event contract
+   event.resolveEvent(true); // Yes outcome wins
+   ```
+
+3. **Update protocol fee receiver**
+   ```solidity
+   eventFactory.updateFeeAddress(newFeeReceiver);
+   ```
+
+### For Users
+1. **Place a bet**
+   ```solidity
+   // First approve USDC spending
+   usdc.approve(eventAddress, 100 * 10**6); // 100 USDC
+   
+   // Then place the bet (true for Yes, false for No)
+   event.placeBet(true, 100 * 10**6);
+   ```
+
+2. **Claim rewards after winning**
+   ```solidity
+   event.claimRewards();
+   ```
+
+3. **Request refund if event isn't resolved**
+   ```solidity
+   // Only available 5 days after deadline if admin hasn't resolved
+   event.refundStake();
+   ```
+
+## License
+This project is licensed under the MIT License.

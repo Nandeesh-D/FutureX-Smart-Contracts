@@ -104,9 +104,17 @@ Contracts have been deployed to the **Sepolia Testnet** using Foundry.
    forge script script/Deploy.s.sol --rpc-url <SEPOLIA_RPC_URL> --private-key <PRIVATE_KEY> --broadcast
    ```
 
+## Admin Access for Jury Panel
+If the **jury panel** wants admin access, they must deploy the contract themselves. After deploying, they should **replace the following values** in the frontend `.env` file:
+
+```env
+VITE_EVENT_FACTORY_ADDRESS=DEPLOYED EVENT FACTORY_ADDRESS
+VITE_EVENT_FACTORY_OWNER_ADDRESS=owner wallet address which is used to deploy the contract
+```
+
+These addresses should be updated to reflect the newly deployed contract's **EventFactory** address and the **admin's wallet address** that deployed the contract.
+
 ## Usage Guide
-
-
 
 ### For Admins
 1. **Create a new event**
@@ -149,3 +157,4 @@ Contracts have been deployed to the **Sepolia Testnet** using Foundry.
 
 ## License
 This project is licensed under the MIT License.
+
